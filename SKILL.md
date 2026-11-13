@@ -1,422 +1,270 @@
 ---
-name: apple-design
-description: >
-  Cross-platform UI/UX design reviewer grounded in Apple's Human Interface Guidelines (123 pages
-  pulled from developer.apple.com, including 57 component pages) plus a design-craft lens for
-  distinctive, non-templated work. Use it to audit, review, critique, or improve any mobile app
-  (iOS, Flutter, React Native) or desktop app (macOS, Tauri, Electron) design: design review, UI
-  audit, HIG compliance, accessibility audit, dark mode, Liquid Glass or glassmorphism, navigation
-  structure, iPhone Duo or foldable layouts, Apple Pay buttons and marks, widgets and Live
-  Activities, onboarding, forms, app icons, generative AI UX, App Review rejections over design or
-  branding, or requests like "make this look less generic". Also use whenever the user shares
-  screenshots, mockups, wireframes, Figma exports, or UI code and wants feedback, even if they
-  only say "review my design" or "is this good UI", or asks to audit a codebase or pull request.
-  Works for SwiftUI, UIKit, AppKit, Flutter, React Native, Tauri, and Electron.
+name: apple-web-craftsmanship
+description: Apple 級 Web 體驗與工藝規範。構建、改寫或審查高質感前端、Landing Page、品牌文案、Bottom Sheet、抽屜、卡片拖拽、彈簧動效、Dark Mode 深色層級、Liquid Glass 液態玻璃，或監控台、GIS 地圖、資料表介面時使用；用戶提及「好看一點」「順一點」「排版怪」「動畫卡」「像 Apple」時強制載入。先分級：A 品牌頁全套排印、光學字階、物理與認知結構；B 導航與手勢組件強制物理、Liquid Glass 控制層與結構、排印僅限宣傳文案；C 監控台、地圖、資料表等讀數介面禁止盤古之白、NBSP、光學標點、孤行與數據層毛玻璃，僅留按下即反饋、1:1 跟手、Dark Mode 語意色階與 1992 HIG 認知結構規範（感知穩定性、黑白先行、生理避藍、無模態、漸進揭露、動詞按鈕與省略號契約）。阻尼比必須經公式換算後寫入 stiffness/damping；bounce 非阻尼比，duration 非響應時間。與 apple-design 互補。
 ---
 
-# Apple Design Skill
+# Apple Web Craftsmanship
 
-You are two people at once: a senior design reviewer who knows Apple's Human Interface Guidelines
-cold, and the design lead of a small studio whose clients pay for a point of view. The first keeps
-a design honest against the platform. The second keeps it from looking like every other app. Every
-review you write carries both.
+提煉自 1992《Macintosh HIG》、WWDC 2018《Designing Fluid Interfaces》、WWDC 2019《Dark Mode》、WWDC 2020《UI Typography》、WWDC 2025《Liquid Glass》與 Apple 官網排印標準。執行前先判定場景分級。
 
-The guidelines live in this skill as 123 Markdown pages pulled from developer.apple.com, plus one
-curated guide. They apply to native Apple apps and, as design principles, to Flutter, React Native,
-Tauri, and Electron. Translate vocabulary for the user's framework; never water down the principle.
+## 1. 場景分級矩陣 [最高優先級]
 
-## The references
+**裁決準則**：介面核心用途為「讀數或掃描高密數據」時，一律歸為 **C 類**（套用 A 類排印或數據層毛玻璃會破壞欄位對齊與讀數清晰度）。
 
-Everything lives under `references/` relative to this skill's directory. Every guideline page is
-named in the tables below, so open a page straight from the table that routes you to it.
+| 級別 | 涵蓋場景 | 微觀排印與光學字階 | 材質、深色層級與幾何 | 流體物理 | 1992 HIG 認知結構 |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **A. 品牌** | Landing、Slogan、產品介紹、活動彈窗 | **全套啟用** | 同心圓角 + Dark Mode Elevation（僅頂部懸浮導航可用 Liquid Glass） | **全套啟用** | 動詞契約與容錯原則 |
+| **B. 導航與手勢** | Bottom Sheet、側欄、卡片拖拽、模態窗 | **僅限組件內宣傳文案**；工具列/標籤/按鈕禁 `nowrap` 與標點拆分 | **全套啟用**（Liquid Glass 限懸浮控制層、玻璃禁疊玻璃、`[data-surface="elevated"]`） | **全套啟用** | **全套啟用**（非阻塞模態、漸進揭露、動詞與省略號） |
+| **C. 監控與數據** | 遙測台、GIS、指標卡、高密表格 | **嚴禁啟用**（保持等寬與緊湊，禁 NBSP、光學位移、孤行、盤古之白） | Dark Mode 語意色階 + 同心圓角；**數據卡片與表格嚴禁使用 Liquid Glass** | **僅留兩項**：按下即反饋、拖拽 1:1 跟手。**禁用**彈簧、投射、橡皮筋 | **強制全套執行**（感知穩定性、黑白先行、生理避藍、無模態） |
 
-| Path | What it is |
-| --- | --- |
-| `references/hig/<page>.md` | One file per HIG page in Apple's own wording and headings. Platform headings are relabeled by device class for skimming: `Phone (iOS)`, `Tablet (iPadOS)`, `Mobile (iOS, iPadOS)`, `Desktop (macOS)`, and combinations such as `Tablet and desktop (iPadOS, macOS)`. Sections that apply only to tvOS, visionOS, or watchOS are omitted; sentences that mention them stay |
-| `references/hig/liquid-glass.md` | Curated guide to the Liquid Glass material with a review checklist and Flutter, Tauri, Electron, and React Native translation |
-| `references/cross-platform.md` | Apple's names in Flutter, React Native, Tauri, and Electron terms, plus the conventions to check in each |
-| `references/code-audit.md` | What to search for in source code: hand-drawn Apple Pay buttons and marks, Liquid Glass misuse, and code that blocks iPhone Duo adaptation, each with its citation and replacement |
-| `references/hig-lookup.md` | Generated table of the same pages with Apple's one-line summary of each, the date Apple last changed it, and the pages Apple publishes that are left out, with the reason. Open it to check what a page covers when its name is ambiguous, or to see which Apple pages are out of scope |
-| `scripts/pull-hig.mjs` | Regenerates the references from Apple's site. Not needed for reviews |
+## 2. 1992 HIG 認知與結構鐵律 [B / C 類核心，A 類取第 5 點]
 
-Rules for using them:
+1. **感知穩定性 (Perceived Stability)**：嚴禁因狀態切換隱藏或移除按鈕與欄位導致版面跳動 (Zero CLS)。不可用控制項保留原位並置灰 (`disabled` 或降低不透明度)；動態數值強制等寬數字 `font-variant-numeric: tabular-nums;`。
+2. **黑白先行與色彩生理學 (B&W First & Beware of Blue)**：
+   - 狀態告警 (正常 / 警告 / 斷線) 必須同時具備色彩與圖標形狀、邊框或字重差異，確保轉灰階後仍可辨識。
+   - 視網膜中央凹缺乏藍光視錐細胞，**小字號讀數、細線圖表與微型狀態點嚴禁使用高飽和純藍色**，避免邊緣失焦發虛。
+3. **無模態與非阻塞 (Modelessness)**：監控與操作台嚴禁使用全屏黑遮罩鎖死畫面。確認或配置面板必須允許拖動移位 (Movable) 或採用局部 Popover，確保可同時監看背景即時數據。
+4. **漸進式揭露 (80% Solution)**：預設視圖僅展示 80% 高頻核心指標 (如 RTT、RSRP、車速)，將 20% 診斷級參數與低頻設定收折於二級抽屜或展開列，防止「功能瀑布」淹沒主畫面。
+5. **語意契約 (動詞按鈕與省略號)**：
+   - 確認框按鈕強制使用具體動作動詞 (如 `[切斷連線]`、`[套用配置]`)，**嚴禁使用含糊的 `[確定 / OK]` 或 `[是 / 否]`**。
+   - 立即生效按鈕不加標點；點擊後需彈窗補充參數或二次確認的按鈕，末尾強制加省略號 `…` (如 `匯出日誌…`)。
 
-- **Read before you cite.** Open the file and quote the guideline. Do not review from memory;
-  Apple changed 15 pages in June 2026, rewrote `layout.md` in September, and updated
-  `widgets.md` and `live-activities.md` in October.
-- **Load about 8 to 12 files per review**, never the whole directory: the always-load set, then
-  3 to 6 more for what is on screen.
-- **Cite file and heading**, for example `buttons.md › Style`. If no reference covers a point,
-  say it is your judgment.
+## 3. 材質、深色層級與幾何 [WWDC 2019 & 2025]
 
-### Always load
+- **同心圓角公式 (Concentricity)**：外層容器圓角必須等於內層元素圓角加內距，消除夾角擠壓感：
+  $$R_{\text{outer}} = R_{\text{inner}} + \text{Padding}$$
+- **Dark Mode 抬升層級 (WWDC 2019 Elevation)**：
+  - 深色模式下禁用黑色投影區分前後層級；Z 軸越高背景明度越高，並用 `1px` 頂部微弱鏡面高光勾勒邊界 (`inset 0 1px 0 rgba(255,255,255,0.12)`)。
+  - **雙上下文自動抬升**：Base 環境 (`#000000` -> `#1C1C1E` -> `#2C2C2E`)；在 Modal / Sheet / Popover 宣告 `data-surface="elevated"` 時，內部自動上移一階 (`#1C1C1E` -> `#2C2C2E` -> `#3A3A3C`)。
+  - 深色次級文字採用冷藍灰透明基底 `rgba(235, 235, 245, α)` (`0.60` / `0.30` / `0.16`)；深色強調色須提高明度 (如 Blue `#007AFF` -> `#0A84FF`，Red `#FF3B30` -> `#FF453A`)。
+- **Liquid Glass 液態玻璃規範 (WWDC 2025)**：
+  - **嚴格層級隔離**：僅限用於**懸浮功能控制層** (Tab Bar、Toolbar、Floating Action Button、Popover)；**嚴禁**用於內容卡片、長文背景及 C 類讀數表格本體。
+  - **玻璃禁疊玻璃 (No Glass on Glass)**：Liquid Glass 容器內部子按鈕與選中態必須使用實色半透明填充 (`rgba(120,120,128,0.2)`)，嚴禁嵌套第二層 `backdrop-filter`。
+  - **Web 雙層實現**：預設 (Safari / Firefox) 提供高飽和毛玻璃 `blur(20px) saturate(180%)` 與雙層鏡面高光框；Chromium 透過 `@supports (backdrop-filter: url(#test))` 結合 `colorInterpolationFilters="sRGB"` 與動態 SDF 邊緣法線貼圖 `<feDisplacementMap>` 模擬凸透鏡邊緣折射（中心維持中性灰 `128, 128` 零失真）。
 
-`accessibility.md`, `layout.md`, `typography.md`, `color.md`, plus `designing-for-ios.md` or
-`designing-for-macos.md` (or both) for the platform in front of you. Unless the app is SwiftUI,
-UIKit, or AppKit, also load `references/cross-platform.md` to translate Apple's terms for it.
+## 4. 微觀排印與光學字階 [WWDC 2020 + CJK，僅限 A 類及 B 類宣傳文案]
 
-### Load by what is on screen
+- **20px 光學尺寸切換 (WWDC 2020)**：
+  - `< 20px` 屬 `SF Pro Text` 區間（Tracking 隨字號增大由 `11px` 的 `+0.0055em` 漸變至 `17px` Body 的 `-0.024em`）；`>= 20px` 跨入 `SF Pro Display` 區間（`20px` Title 3 處重置為 `+0.019em`，再隨字號增大收緊至 `64px` Display 的 `+0.003em`）。
+  - 非 SF Pro 降級字體在 `>= 20px` 大標題需設 `-0.015em` 至 `-0.025em`；繁體中文段落 (`:lang(zh-Hant)`) 歸零負向 `letter-spacing` 避免筆畫擠壓。
+- **混排與字體棧**：
+  - 盤古之白：優先用 CSS `text-autospace: normal; text-spacing-trim: space-all;`，不支援時文案手動加半形空格。中文與全形標點間嚴禁空格。
+  - 字型棧：`-apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang TC", "PingFang HK", "PingFang SC", sans-serif`（繁體介面 `TC` 必須在 `SC` 前）。
+  - 大標題標點收窄：可加 `font-feature-settings: "halt" on, "chws" on;`；多數 Web 字體無此特性，必須搭配光學標點校正。
+- **防腰斬、孤行與斷行**：
+  - 含空格之品牌與型號強制用 `&nbsp;` (如 `iPhone&nbsp;18&nbsp;Pro&nbsp;Max`)；普通敘述句空格嚴禁替換。
+  - 段落最後 2-4 字連同句尾標點、行尾成語或動賓短語包覆 `<span className="nowrap">`，禁止整段包覆。
+  - 長標題於主謂或轉折處手動插入 `<br className="br-sm-only" />`（Tailwind 用 `sm:hidden`，同一斷點禁混用兩套）。
+- **居中句號光學校正**：全形句號墨水偏左下，`text-align: center` 時視覺偏左。將句號移出寬度計算（`top`/`left`/`right`/`bottom` **必須全部留空**，寫 `top: 0` 會導致標點飛至容器頂角）：
 
-| The design shows | Load |
-| --- | --- |
-| Tabs, sidebar, split view, back navigation | `tab-bars.md`, `sidebars.md`, `split-views.md`, `toolbars.md` |
-| Buttons, menus, actions | `buttons.md`, `menus.md`, `context-menus.md`, `pop-up-buttons.md`, `pull-down-buttons.md` |
-| Sheets, dialogs, popovers, alerts | `modality.md`, `sheets.md`, `alerts.md`, `action-sheets.md`, `popovers.md` |
-| Forms, text entry, pickers | `entering-data.md`, `text-fields.md`, `pickers.md`, `toggles.md`, `virtual-keyboards.md` |
-| Lists, tables, collections, cards | `lists-and-tables.md`, `collections.md`, `labels.md`, `scroll-views.md` |
-| Search | `searching.md`, `search-fields.md` |
-| Glass, blur, translucent bars | `liquid-glass.md`, `materials.md` |
-| Dark appearance | `dark-mode.md` |
-| Icons, symbols, app icon | `icons.md`, `sf-symbols.md`, `app-icons.md` |
-| Motion, transitions, haptics | `motion.md`, `playing-haptics.md` |
-| Loading, progress, errors, empty states | `loading.md`, `feedback.md`, `progress-indicators.md`, `writing.md` |
-| First run, sign-in, permissions | `onboarding.md`, `launching.md`, `managing-accounts.md`, `privacy.md`, `sign-in-with-apple.md` |
-| Settings | `settings.md` |
-| Windows, menu bar, keyboard, pointer (desktop) | `windows.md`, `the-menu-bar.md`, `keyboards.md`, `pointing-devices.md`, `focus-and-selection.md` |
-| iPhone Duo: two displays, a fold, bars on the side | `designing-for-iphone-duo.md`, `split-views.md`, `toolbars.md`, `tab-bars.md` |
-| Notifications, widgets, live activities | `notifications.md`, `managing-notifications.md`, `widgets.md`, `live-activities.md` |
-| Charts | `charting-data.md`, `charts.md` |
-| Checkout, payment options, Apple Pay | `apple-pay.md`, `buttons.md` |
-| AI features | `generative-ai.md`, `machine-learning.md` |
-| Brand expression | `branding.md`, `design-principles.md` |
-
-### Every page, by Apple's section
-
-Every page is here, including the ones placed above. Open the file directly; names follow
-Apple's page titles.
-
-| Section | Files in `references/hig/` |
-| --- | --- |
-| Getting started | `design-principles.md`, `designing-for-ios.md`, `designing-for-ipados.md`, `designing-for-macos.md`, `designing-for-games.md`, `designing-for-iphone-duo.md` |
-| Foundations | `accessibility.md`, `app-icons.md`, `branding.md`, `color.md`, `dark-mode.md`, `icons.md`, `images.md`, `inclusion.md`, `layout.md`, `materials.md`, `motion.md`, `privacy.md`, `right-to-left.md`, `sf-symbols.md`, `typography.md`, `writing.md` |
-| Patterns | `charting-data.md`, `collaboration-and-sharing.md`, `drag-and-drop.md`, `entering-data.md`, `feedback.md`, `file-management.md`, `going-full-screen.md`, `launching.md`, `live-viewing-apps.md`, `loading.md`, `managing-accounts.md`, `managing-notifications.md`, `modality.md`, `multitasking.md`, `offering-help.md`, `onboarding.md`, `playing-audio.md`, `playing-haptics.md`, `playing-video.md`, `printing.md`, `ratings-and-reviews.md`, `searching.md`, `settings.md`, `undo-and-redo.md` |
-| Components › Content | `charts.md`, `image-views.md`, `text-views.md`, `web-views.md` |
-| Components › Layout and organization | `boxes.md`, `collections.md`, `column-views.md`, `disclosure-controls.md`, `labels.md`, `lists-and-tables.md`, `outline-views.md`, `split-views.md`, `tab-views.md` |
-| Components › Menus and actions | `activity-views.md` (the share sheet), `buttons.md`, `context-menus.md`, `dock-menus.md`, `edit-menus.md`, `home-screen-quick-actions.md`, `menus.md`, `pop-up-buttons.md`, `pull-down-buttons.md`, `the-menu-bar.md`, `toolbars.md` |
-| Components › Navigation and search | `path-controls.md`, `search-fields.md`, `sidebars.md`, `tab-bars.md`, `token-fields.md` |
-| Components › Presentation | `action-sheets.md`, `alerts.md`, `page-controls.md`, `panels.md`, `popovers.md`, `scroll-views.md`, `sheets.md`, `windows.md` |
-| Components › Selection and input | `color-wells.md`, `combo-boxes.md`, `image-wells.md`, `pickers.md`, `segmented-controls.md`, `sliders.md`, `steppers.md`, `text-fields.md`, `toggles.md`, `virtual-keyboards.md` |
-| Components › Status | `gauges.md`, `progress-indicators.md`, `rating-indicators.md` |
-| Components › System experiences | `app-shortcuts.md`, `controls.md` (Control Center, Lock Screen, and Action button controls), `live-activities.md`, `notifications.md`, `snippets.md` (Siri and App Shortcut results and confirmations), `status-bars.md`, `widgets.md` |
-| Inputs | `apple-pencil-and-scribble.md`, `focus-and-selection.md`, `game-controls.md`, `gestures.md`, `gyro-and-accelerometer.md`, `keyboards.md`, `pointing-devices.md` |
-| Technologies | `airplay.md`, `app-clips.md`, `apple-in-app-purchase.md`, `apple-pay.md`, `augmented-reality.md`, `generative-ai.md`, `icloud.md`, `machine-learning.md`, `maps.md`, `nfc.md`, `sign-in-with-apple.md`, `siri.md`, `voiceover.md` |
-| Curated | `liquid-glass.md` |
-
-To find which pages mention a term, search the folder: `grep -ril "size class" references/hig`.
-
-## Apple's design principles
-
-Apple reintroduced eight principles in June 2026 (`design-principles.md`). Use them as the first
-filter: a screen that breaks a principle has a bigger problem than any single guideline it breaks.
-
-| Principle | Apple's line | The question you ask |
-| --- | --- | --- |
-| Purpose | Make something meaningful | What is this screen for, and does the design serve it? |
-| Agency | Let people do things their own way | Can people explore, skip, and recover from mistakes? |
-| Responsibility | Act in people's best interest | Are permissions, data use, and intent transparent? |
-| Familiarity | Build on what people know | Do patterns match the platform and stay consistent? |
-| Flexibility | Adapt to diverse contexts and needs | Does it work across sizes, inputs, text sizes, and abilities? |
-| Simplicity | Be clear and direct | Has every element earned its place? |
-| Craft | Care about every detail | Spacing, alignment, wording, animation: is it finished? |
-| Delight | Make it human | Is there a feeling here, and is it the right one? Apple's own warning: don't mistake delight for decoration |
-
-## Review process
-
-### Step 1: Establish context
-
-Before judging anything, pin down:
-
-- **Platform** and **framework**: mobile or desktop; Flutter, React Native, SwiftUI, UIKit,
-  Tauri, Electron, or other.
-- **App category** and **audience**.
-- **The artifact**: screenshots, mockups, wireframes, code, or a description. Say what you can and
-  cannot verify from it. Contrast is computed from hex values, not estimated from a JPEG.
-- **The design's thesis**: in one sentence, what is the single job of this screen, and what is the
-  most characteristic thing about it? If the design gives no answer, note it under Craft notes. If
-  the artifact can't show it (a code fragment, a wireframe), say so as a limit, not a finding.
-- **The user's goal**: full audit, a specific worry, or a direction for improvement.
-
-Infer what you can; ask only if the answer changes the review.
-
-Scope and limits:
-
-- A web app or an Android-only app gets the principles and the foundations (accessibility, color,
-  typography, layout, writing) but not Apple's platform conventions. Say which parts apply.
-- If the platform can't be determined and it changes the verdict, ask; otherwise review for both.
-- Screenshots support layout, hierarchy, and copy review. Contrast and sizes need real values;
-  estimate only when you can sample the colors, and mark estimates as such. A limit is not a
-  finding.
-
-### Step 2: Load references
-
-Follow the loading tables above and read the files. Extract the principle behind each
-Apple-specific sentence and translate the vocabulary.
-
-### Step 3: Audit through five lenses, in this order
-
-Each lens opens with the files its rules were distilled from. The always-load set already covers
-Lens 1 and most of Lens 3. Open the other files when the design touches their area, and cite only
-files you actually opened.
-
-#### Lens 1: Accessibility (failures are Critical)
-
-Distilled from `accessibility.md`, `typography.md`, and `color.md`:
-
-- Text scales with the system setting and layouts survive the largest sizes with hierarchy intact.
-- Type sizes: mobile default 17 pt, minimum 11 pt; desktop default 13 pt, minimum 10 pt. Avoid
-  light and thin weights for small text.
-- Contrast: text up to 17 pt needs 4.5:1; text at 18 pt or larger, or bold text, needs 3:1.
-  Compute it from actual values when you have them and show the numbers.
-- Controls: mobile default 44 by 44 pt, minimum 28 by 28 pt; desktop default 28 by 28 pt, minimum
-  20 by 20 pt. Spacing between controls matters as much as size.
-- Nothing is conveyed by color alone. Every icon-only control has a text label for screen readers.
-  Keyboard-only use works on desktop.
-- Motion is optional and never the only carrier of meaning. Reduced motion, reduced transparency,
-  and increased contrast all have an answer.
-
-#### Lens 2: Platform conventions (failures are usually High)
-
-Mobile, distilled from `designing-for-ios.md`, `tab-bars.md`, `toolbars.md`, `sheets.md`,
-`search-fields.md`, `gestures.md`, `layout.md`, and `designing-for-iphone-duo.md`:
-
-- Top-level navigation is a tab bar, or a tab bar that converts to a sidebar on tablet. Tabs
-  navigate, they don't act. Few tabs, overflow into a More tab avoided, tabs never hidden or
-  disabled, single-word labels where possible, filled symbols preferred.
-- Actions on the current view live in toolbars. Key actions such as Done or Submit get the
-  prominent style, toolbars stay lightly tinted and monochrome over colorful content, and a More
-  menu holds the overflow.
-- Search that matters gets a primary position: a search tab, or a field at the bottom when there
-  is room.
-- Sheets: one at a time, a grabber when resizable, swipe to dismiss, a way out besides Done, and
-  a medium detent considered for progressive disclosure.
-- Content respects safe areas and one-handed reach. Important controls sit mid-screen or lower.
-  Swipe to go back and swipe actions on list rows work. iPhone Duo side bars follow system order.
-
-Desktop, distilled from `designing-for-macos.md`, `windows.md`, `the-menu-bar.md`, `sidebars.md`,
-`keyboards.md`, and `settings.md`:
-
-- Every command is reachable from the menu bar, including every toolbar item. Standard shortcuts
-  are respected and custom ones are few.
-- Windows resize fluidly, use the system's window controls and appearances, and never keep
-  critical information in a bottom bar.
-- Sidebars show at most two levels, can be hidden, and don't hold critical actions at the bottom.
-- Settings live under the app menu in a fixed-toolbar settings window that holds general,
-  infrequently changed options.
-- Everything interactive has pointer feedback, a hover state, and a comfortable hit region.
-
-Both: light and dark appearance with no app-specific appearance switch, semantic colors, and
-Liquid Glass or any blur only on the floating functional layer, never in content
-(`liquid-glass.md`).
-
-#### Lens 3: Visual design and craft (findings are High or Medium)
-
-Rules, distilled from `color.md`, `typography.md`, `layout.md`, `icons.md`, `materials.md`, and `motion.md`:
-
-- One color means one thing. Colors work in light, dark, and increased contrast. Nothing is
-  hard-coded to a system color value.
-- Few typefaces, a clear scale, weight and size carry hierarchy, and the type still reads at the
-  largest accessibility sizes.
-- Alignment, grouping, and indentation that shows hierarchy. Progressive disclosure over density.
-  Layout follows available space, not device or orientation, with the same functions at any size.
-- Icons share one visual language and match the weight of adjacent text. Custom icons are vector
-  and labeled.
-- Motion is purposeful, brief, cancellable, and rare on frequent interactions.
-
-Then the craft lens, drawn from Apple's Craft and Delight principles and from studio practice:
-
-- **Does it have a point of view?** Name the one thing this design would be remembered by. If
-  nothing stands out, say so under Craft notes. A deliberately quiet utility can be the right
-  answer, and when it is, say that too.
-- **Is it a template?** Three looks currently dominate generated interfaces: warm cream with a
-  high-contrast serif and a terracotta accent; near-black with one acid-green or vermilion
-  accent; a broadsheet of hairline rules, zero radius, and dense columns. A palette, type pairing,
-  or layout that arrives with no reason rooted in the product is a default, not a choice. The same
-  goes for a hero built from a big number over a small label with a gradient accent, and for
-  01 / 02 / 03 markers on content that isn't a sequence.
-- **Does the typography carry personality**, or is it a neutral delivery vehicle? System type is
-  the right call for navigation and controls; brand can live in display text, content, and
-  moments.
-- **Does structure encode information?** Numbering, eyebrows, dividers, and labels should say
-  something true about the content.
-- **Is the boldness spent in one place?** One signature element, everything around it quiet.
-  Apple says the same: branding defers to content, brand color is saved for primary actions and
-  status or moved into the content layer, and logos don't repeat (`branding.md`).
-- **Remove one accessory.** Ask what can go without loss. If nothing can, say the design is
-  already lean.
-
-The tension between "feels at home on the platform" and "couldn't be mistaken for anyone else" is
-real. Resolve it the way Apple does: familiar components carry navigation and controls, and a
-restyled one keeps familiar sizing, placement, and behavior (`branding.md`); identity lives in
-color, type, imagery, tone of voice, and a few defining moments.
-
-#### Lens 4: Interaction (findings are usually Medium)
-
-Distilled from `feedback.md`, `loading.md`, `modality.md`, `alerts.md`, `undo-and-redo.md`, and
-`entering-data.md`:
-
-- Something appears immediately while loading, people can keep working, and progress is
-  determinate when possible.
-- Feedback lives in the interface, not in alerts. Alerts are rare, direct, never shown on launch,
-  never used for common undoable actions, and never default to OK unless purely informational.
-- Destructive, irreversible actions get a warning and a Cancel. Undo covers the rest.
-- Modal views have an obvious way out and a single short task.
-- Data entry pulls from the system, offers choices over typing, validates dynamically, and never
-  prepopulates a password.
-
-#### Lens 5: Content and writing (findings are usually Medium)
-
-Distilled from `writing.md`, plus the copy rules below:
-
-- Every label says what happens: "Save changes", not "Submit". An action keeps its name through
-  the whole flow: a "Publish" button produces "Published".
-- Capitalization follows the platform (Apple uses title-style for buttons, menu items, and titles;
-  Material uses sentence case) and is applied consistently. Mixed conventions on one screen are a
-  finding.
-- Errors say what went wrong and how to fix it, in the interface's voice, without apologizing.
-  Empty screens invite the next action.
-- Names come from what people control and recognize, not from how the system is built.
-- No jargon, no filler, one job per element.
-
-### Step 4: Write the report
-
-```text
-## Design review: <name>
-
-### Summary
-Two or three sentences. Overall rating: Excellent / Good / Needs work / Critical issues.
-Name the design's thesis and the one thing it will be remembered by, or that it lacks one.
-
-### Critical
-Must fix: accessibility failures, convention breaks that confuse people.
-- **What**: the problem, with numbers when you have them
-- **Why**: the principle, cited as `file.md › Heading` with a short quote
-- **Fix**: the concrete change, in the user's framework
-
-### Improvements
-Should fix. Same format, each finding tagged High, Medium, or Low.
-
-### Craft notes
-Point of view, typography, signature element, restraint. Same format with tags, or a short
-paragraph when the design is strong.
-
-### What works
-Patterns to keep. Be specific so they survive the next iteration.
-
-### Platform notes
-Anything specific to mobile versus desktop, to iPhone Duo, or to the framework.
+```html
+<h1 class="headline-optical-center">
+  <span class="nowrap">想升級，時機正正好<span class="optical-punct">。</span></span>
+</h1>
 ```
 
-Include only the sections that have content; Summary always appears. A design with no Critical
-or High findings gets a short review: Summary, What works, and a few Improvements at most.
+*備選方案（三選一）：整行 `padding-left: 0.5em`，或標點後接 `margin-right: -0.5em` 空節點。*
 
-Severity, tagged on every finding:
+## 5. 流體物理 [WWDC 2018，A/B 類全套；C 類僅按下反饋與 1:1 跟手]
 
-- **Critical**: accessibility failures, unusable on some devices or sizes, conventions broken in
-  ways that confuse.
-- **High**: real friction, poor contrast or readability, looks foreign on its platform, templated
-  with no point of view.
-- **Medium**: suboptimal patterns, missed system components, small inconsistencies.
-- **Low**: polish and edge cases.
+### 五大物理鐵律
+1. **按下即反饋**：走 `:active` 或 `pointerdown`，禁等 `click`，禁加影響手感的 debounce。拖拽表面禁用 `manipulation`，設為 `touch-action: none`（或鎖定單軸）。
+2. **隨時可抓回**：動畫中再次按下 (`pointerdown`)，立即對進行中的 `animate` 呼叫 `.stop()`，直接從畫面當前渲染值接手，禁止從邏輯終點跳回。
+3. **速度原樣交接**：鬆手速度直接作為彈簧初速傳入（禁歸零、禁重複除以 1000）。
+4. **空間對稱**：原路進出；彈層 `transform-origin` 必須落在觸發按鈕上。
+5. **動態減免**：於事件觸發時即時讀取 `window.matchMedia('(prefers-reduced-motion: reduce)').matches`（禁止在 render 階段快取），啟用時直接到位或改用短透明度過渡。
 
-Critical findings fill the Critical section; everything else goes to Improvements or Craft notes
-with its tag. The Summary rating follows from the tags: **Critical issues** when any Critical
-finding exists; **Needs work** when several High findings exist; **Good** when nothing is
-Critical and at most a couple of High findings remain; **Excellent** when nothing is above Medium
-and the craft lens found a point of view.
+### 彈簧參數換算與停點算法
+Apple 參數為阻尼比 $\zeta$ 與響應時間 $T$ (秒)。**嚴禁將 $\zeta$ / $T$ 直接填入 Motion 的 `damping` / `stiffness`**（$\zeta = 1$ 填入 `damping` 幾乎無阻尼）。質量取 $m = 1$ 時：$k = (2\pi/T)^2$，$c = 4\pi\zeta/T$。Motion 的 `bounce: 0.2` 不等於 $\zeta = 0.8$，`duration` 亦非 $T$。
 
-Citation format:
+| 交互場景 | $\zeta$ | $T$ | stiffness ($k$) | damping ($c$) | $\zeta = 0.8$ 啟用條件 |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| 位移、分頁、重排 | 1.0 | 0.4s | 247 | 31 | 禁用 |
+| 確認框、選單 | 1.0 | 0.35s | 322 | 36 | 禁用 |
+| 抽屜、側欄 | 0.8 / 1.0 | 0.3s | 439 | 甩動 34 / 慢放 42 | **僅限甩動鬆手**；慢放維持 $\zeta = 1.0$ |
+| 旋轉、翻轉 | 0.8 | 0.4s | 247 | 25 | 僅限帶慣性之翻轉 |
 
-> `tab-bars.md › Best practices`: "Use a tab bar to support navigation, not to provide actions."
+- **二元短行程 (抽屜開/關)**：速度 $\vert{}v\vert{} > 700\text{-}900\text{ px/s}$ 沿速度方向提交，否則依中線判定。**禁止**對短行程套用滾動衰減。
+- **多停點長行程**：先以指數衰減投射落點 $Endpoint = Current + (v/1000) \times \frac{d}{1 - d}$（100-200px 間距用 $d = 0.99$，整頁長列表用 $d = 0.998$），吸附最近停點並交接原速度。
+- **越界橡皮筋**：$f(x) = \frac{x \cdot dim \cdot 0.55}{dim + 0.55 \cdot \vert{}x\vert{}}$。使用 Motion `drag="y"` 時直接用 `dragElastic` 並設 `dragMomentum={false}`，**禁止**在 `onDrag` 內重複 `y.set`。
 
-## Specialized review modes
+## 6. 核心 CSS Tokens 與標準代碼範本
 
-- **App icon.** `app-icons.md`, `icons.md`. Layered composition, clear edges, centered content,
-  filled overlapping shapes, no text unless essential, no UI replicas, dark and tinted variants
-  built from the light icon.
-- **Accessibility audit.** `accessibility.md`, `voiceover.md`, `typography.md`, `color.md`,
-  `motion.md`. Walk every item in Lens 1, then screen reader order and labels, keyboard-only
-  paths, Switch Control, captions, and haptic or visual doubles for audio cues.
-- **Dark mode.** `dark-mode.md`, `color.md`, `materials.md`. Semantic colors, softened whites,
-  both appearances tested, icons and images checked, no app-level appearance toggle.
-- **Liquid Glass.** `liquid-glass.md`, `materials.md`, `color.md`, then the component pages in
-  play. Use the checklist in the curated guide, and `references/code-audit.md` when you have the
-  code. Trigger on "Liquid Glass", "glassmorphism", "frosted", "blur", or any translucent bar.
-- **Apple Pay.** `apple-pay.md`, `buttons.md`, and `references/code-audit.md`. Any Apple Pay
-  button not drawn by Apple's API, any mark not Apple's unaltered artwork, the Apple logo standing
-  in for the word Apple, or a text-only Apple Pay option beside logos is Critical: App Store Review
-  Guideline 4.9 rejects it. Include web checkouts the app opens.
-- **Code audit.** When given source code or a repository, follow `references/code-audit.md`:
-  search, read each match, and cite `path:line` beside the guideline. It covers Apple Pay,
-  Liquid Glass, and iPhone Duo in code; the lenses above still apply to the rest.
-- **Navigation structure.** `tab-bars.md`, `sidebars.md`, `split-views.md`, `toolbars.md`,
-  `searching.md`, `layout.md`. Map the hierarchy, count tabs and levels, check that every section
-  is reachable, that the current location is always visible, and that tablet, desktop, and iPhone
-  Duo widths convert sensibly.
-- **iPhone Duo.** `designing-for-iphone-duo.md`, `split-views.md`, `toolbars.md`, `tab-bars.md`.
-  Walk the outer display, the inner display, a partial fold, and Split View through every rule on
-  the page, starting with fixed widths where size classes belong, functions that differ between
-  displays, bars pulled off the system's default placement, and essential content under a camera
-  or across the fold. Apple's automatic adaptations cover standard components; custom ones,
-  including bars and dialogs drawn by Flutter or in JavaScript, adapt only through the framework
-  or your code. With the code in hand, run the iPhone Duo table in `references/code-audit.md`.
-- **Onboarding and permissions.** `onboarding.md`, `launching.md`, `managing-accounts.md`,
-  `privacy.md`. Launch instantly, teach through use, delay sign-in, ask for permission in context
-  with an honest purpose string, never advertise on launch.
-- **Forms and data entry.** `entering-data.md`, `text-fields.md`, `pickers.md`, `toggles.md`,
-  `virtual-keyboards.md`, `keyboards.md`. Right keyboard type, hints in fields, dynamic
-  validation, sensible tab order, choices over typing.
-- **Generative AI UX.** `generative-ai.md`, `machine-learning.md`. Disclosure, expectations,
-  control, refine and revert, hallucination awareness, permission before irreversible actions,
-  a graceful experience when the feature is off.
-- **Widgets and Live Activities.** `widgets.md`, `live-activities.md`, `notifications.md`.
-  Glanceable content that is not just a launcher, every rendering mode and appearance (full-color,
-  accented, vibrant; light, dark, clear, tinted), a removable background for StandBy, CarPlay, and
-  Apple HomeView, and every Live Activity presentation, with compact and minimal views that fit a
-  28 pt circle when the Dynamic Island is limited in width, as on iPhone in landscape.
-- **Component check.** Any single component: load its page and review against its best practices
-  and platform sections.
+```css
+/* apple-craftsmanship.css */
+:root {
+  color-scheme: light dark;
+  --font-apple-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display",
+    "PingFang TC", "PingFang HK", "PingFang SC", sans-serif;
 
-## Design improvement mode
+  /* WWDC 2019 Elevation & Semantic Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f2f2f7;
+  --bg-tertiary: #ffffff;
+  --label-primary: rgba(0, 0, 0, 1);
+  --label-secondary: rgba(60, 60, 67, 0.6);
+  --label-tertiary: rgba(60, 60, 67, 0.3);
+  --separator-translucent: rgba(60, 60, 67, 0.29);
+  --tint-blue: #007aff;
+  --tint-green: #34c759;
+  --tint-red: #ff3b30;
+  --tint-orange: #ff9500;
+  --elevated-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
 
-When asked to improve, redesign, or "make it look less generic", review first, then work like a
-studio.
+  /* WWDC 2025 Liquid Glass Chrome */
+  --glass-bg: rgba(255, 255, 255, 0.48);
+  --glass-specular-top: rgba(255, 255, 255, 0.85);
+  --glass-specular-bottom: rgba(255, 255, 255, 0.25);
 
-1. **Ground it in the subject.** Name the product, its audience, and the screen's single job.
-   Draw the visual world from the subject's own materials, artifacts, and vernacular, and from
-   anything you know about the user's brand.
-2. **Plan a compact token system** before touching layout:
-   - **Color**: four to six named hex values with roles (surface, content, accent, signal), each
-     with light and dark variants and a contrast figure against its surface.
-   - **Type**: a display face used with restraint, a body face, and a utility face for data if
-     needed. Keep body text at or above platform minimums and show the scale.
-   - **Layout**: one sentence and an ASCII wireframe of the key screen at compact and regular
-     widths.
-   - **Signature**: the single element the design will be remembered by, and why it belongs to
-     this product.
-   - **Motion**: one orchestrated moment if it serves the subject, otherwise none.
-3. **Critique the plan before proposing it.** Would you have produced this same plan for a similar
-   brief about a different product? Then it is a default. Revise it and say what changed and why.
-   If the plan already reads as specific to this product, say so and keep it. Check it against the
-   platform: navigation and controls still use system components and conventions.
-4. **Propose fixes as concrete changes** in the user's framework: exact colors with contrast
-   ratios, exact type styles, the named system component that replaces the custom one, the
-   property to set. Not "fix the contrast" but "body text from #999999 to #595959 on white,
-   7.0:1".
-5. **Sequence the work**: accessibility, then conventions, then craft, then polish.
-6. **Critique again.** Look for one thing to remove, and say if there is none. Confirm the quality
-   floor: responsive down to the smallest supported width, visible keyboard focus on desktop,
-   reduced motion and reduced transparency respected, the largest text size survivable.
+  font-family: var(--font-apple-sans);
+  font-optical-sizing: auto;
+  text-autospace: normal;
+  text-spacing-trim: space-all;
+  -webkit-font-smoothing: antialiased;
+}
 
-## Working rules
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #000000;
+    --bg-secondary: #1c1c1e;
+    --bg-tertiary: #2c2c2e;
+    --label-primary: rgba(255, 255, 255, 1);
+    --label-secondary: rgba(235, 235, 245, 0.6);
+    --label-tertiary: rgba(235, 235, 245, 0.3);
+    --separator-translucent: rgba(84, 84, 88, 0.6);
+    --tint-blue: #0a84ff;
+    --tint-green: #30d158;
+    --tint-red: #ff453a;
+    --tint-orange: #ff9f0a;
+    --elevated-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.12), 0 16px 40px rgba(0, 0, 0, 0.6);
+    --glass-bg: rgba(34, 34, 38, 0.54);
+    --glass-specular-top: rgba(255, 255, 255, 0.3);
+    --glass-specular-bottom: rgba(255, 255, 255, 0.08);
+  }
+  [data-surface="elevated"] {
+    --bg-primary: #1c1c1e;
+    --bg-secondary: #2c2c2e;
+    --bg-tertiary: #3a3a3c;
+  }
+}
 
-- **Numbers, not adjectives.** "12 px #AAAAAA on white, 2.3:1, below 4.5:1" beats "hard to read".
-  If you can't measure, say what you would need.
-- **Cite it or label it as judgment.** Never invent a guideline.
-- **Speak the framework.** `BottomNavigationBar`, not `UITabBarController`, when the user writes
-  Flutter.
-- **Name the trade-off** when a guideline collides with a business need, then recommend.
-- **Review the flow, not just the screen.** A fine screen can break the navigation around it.
-- **Don't over-critique.** A strong design gets a short review and a clear statement of what makes
-  it strong. Not every review needs twenty findings.
-- **Don't flatten the personality.** Guidelines exist to make apps usable, not identical. If your
-  fixes would leave the design indistinguishable from a template, you have gone too far.
+/* WWDC 2020 Optical Typography Classes */
+.type-body { font-size: 1.0625rem; line-height: 1.375rem; letter-spacing: -0.024em; }
+.type-title-3 { font-size: 1.25rem; line-height: 1.5625rem; letter-spacing: 0.019em; }
+.type-large-title { font-size: 2.125rem; line-height: 2.5625rem; letter-spacing: 0.011em; font-weight: 700; }
+:lang(zh-Hant) .type-body { letter-spacing: 0em; }
+
+/* Utilities & Liquid Glass */
+.tabular-nums { font-variant-numeric: tabular-nums; }
+.nowrap { white-space: nowrap; }
+.headline-optical-center { position: relative; text-align: center; }
+.optical-punct { position: absolute; pointer-events: none; }
+@media (min-width: 640px) { .br-sm-only { display: none; } }
+
+.pressable { touch-action: manipulation; transition: transform 100ms ease-out; }
+.pressable:active { transform: scale(0.97); }
+
+.liquid-glass-chrome {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: inset 0 1px 0.5px 0 var(--glass-specular-top),
+              inset 0 -1px 0.5px 0 var(--glass-specular-bottom),
+              0 12px 32px -6px rgba(0, 0, 0, 0.16);
+}
+@supports (backdrop-filter: url(#test)) {
+  .liquid-glass-chrome { backdrop-filter: var(--liquid-filter, blur(20px) saturate(180%)); }
+}
+```
+
+```typescript
+// physics.ts
+export function springFromApple({ dampingRatio, response }: { dampingRatio: number; response: number }) {
+  return {
+    stiffness: (2 * Math.PI / response) ** 2,
+    damping: (4 * Math.PI * dampingRatio) / response,
+    mass: 1,
+  };
+}
+
+export function calculateRubberband(offset: number, dimension: number, constant = 0.55) {
+  return (offset * dimension * constant) / (dimension + constant * Math.abs(offset));
+}
+
+export function projectMomentum(position: number, velocity: number, decelerationRate = 0.998) {
+  return position + (velocity / 1000) * decelerationRate / (1 - decelerationRate);
+}
+```
+
+```tsx
+// AppleFluidSheet.tsx (整合 Elevated 上下文、同心圓角 R_outer = 28px = 12px + 16px、可中斷彈簧)
+import { useRef } from 'react';
+import {
+  animate, motion, useMotionValue,
+  type AnimationPlaybackControls, type PanInfo,
+} from 'framer-motion';
+import { springFromApple } from './physics';
+
+const OPEN = 0, CLOSED = 360, FLING = 800;
+
+export function AppleFluidSheet() {
+  const y = useMotionValue(OPEN);
+  const flight = useRef<AnimationPlaybackControls | null>(null);
+
+  function stopFlight() {
+    flight.current?.stop();
+  }
+
+  function onDragEnd(_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) {
+    const velocity = info.velocity.y;
+    const flung = Math.abs(velocity) > FLING;
+    const target = flung
+      ? (velocity > 0 ? CLOSED : OPEN)
+      : (y.get() > CLOSED / 2 ? CLOSED : OPEN);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      y.set(target);
+      return;
+    }
+
+    const spring = springFromApple({ dampingRatio: flung ? 0.8 : 1, response: 0.3 });
+    flight.current = animate(y, target, { type: 'spring', ...spring, velocity });
+  }
+
+  return (
+    <motion.div
+      data-surface="elevated"
+      style={{ y, background: 'var(--bg-primary)', boxShadow: 'var(--elevated-shadow)' }}
+      drag="y"
+      dragConstraints={{ top: OPEN, bottom: CLOSED }}
+      dragElastic={0.2}
+      dragMomentum={false}
+      onPointerDown={stopFlight}
+      onDragEnd={onDragEnd}
+      className="fixed inset-x-0 bottom-0 mx-auto max-w-lg touch-none select-none rounded-t-[28px] p-4"
+    >
+      <div className="mx-auto mb-5 h-1 w-10 rounded-full bg-neutral-400/50" />
+      <h2 className="headline-optical-center type-title-3 font-semibold" style={{ color: 'var(--label-primary)' }}>
+        <span>升級你的工作流</span>
+        <br className="br-sm-only" />
+        <span className="nowrap">
+          體驗極致效能<span className="optical-punct">。</span>
+        </span>
+      </h2>
+      <p className="mt-2 text-center text-sm leading-relaxed" style={{ color: 'var(--label-secondary)' }}>
+        專為&nbsp;<strong>iPad&nbsp;Pro&nbsp;(M4)</strong>&nbsp;調整。
+        多軌任務切換時，仍留得住<span className="nowrap">餘裕。</span>
+      </p>
+      <div className="mt-5 rounded-[12px] p-3 text-center" style={{ background: 'var(--bg-secondary)' }}>
+        <button type="button" className="pressable rounded-full px-6 py-2.5 text-sm font-medium text-white" style={{ background: 'var(--tint-blue)' }}>
+          立即啟用
+        </button>
+      </div>
+    </motion.div>
+  );
+}
+```
+
+## 7. 輸出前自檢閉環 (Verification Hook)
+
+[生成或審查交付前強制自檢：(1) 場景分級是否明確，C 類讀數介面是否已剔除所有排印包裝、彈簧/投射/橡皮筋與數據層毛玻璃？ (2) B/C 類是否落實 1992 HIG 感知穩定性 (置灰不隱藏、tabular-nums)、黑白先行、避用高飽和純藍細字/細線、無模態與動詞/省略號契約？ (3) 材質與色彩是否遵守同心圓角 ($R_{\text{outer}} = R_{\text{inner}} + \text{Padding}$)、Dark Mode `[data-surface="elevated"]` 抬升、Liquid Glass 僅限控制層且玻璃禁疊玻璃？ (4) 字階是否遵守 `20px` Text/Display 光學分界且繁中段落 (`:lang(zh-Hant)`) 歸零負字距？ (5) 按下反饋是否走 `:active`/`pointerdown` 且中途觸碰有呼叫 `.stop()`？ (6) 彈簧是否經 `springFromApple` 換算、開啟 `dragMomentum={false}` 且事件內即時讀取 `matchMedia`？ (7) A 類品牌型號 `&nbsp;`、段尾 2-4 字 `.nowrap`、窄屏片語斷行、無定位座標之 `.optical-punct` 是否合規？]

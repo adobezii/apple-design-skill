@@ -1,0 +1,7 @@
+interface:
+  display_name: "Apple Web 工藝"
+  short_description: "Apple 級互動、流體物理、排印、Liquid Glass 與無障礙交付規範"
+  brand_color: "#0A84FF"
+  default_prompt: "使用 $apple-web-craftsmanship 審查並改善這個前端的互動、排版、物理、深色層級、Liquid Glass 與無障礙品質。"
+policy:
+  allow_implicit_invocation: true
